@@ -734,7 +734,7 @@ function updateCountdown() {
     document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
 }
 
-setInterval(update极down, 1000);
+setInterval(updateCountdown, 1000);
 updateCountdown();
 
 // Controle do formulário de confirmação
@@ -800,3 +800,4 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     this.style.display = 'none';
 });
 </script>
+
