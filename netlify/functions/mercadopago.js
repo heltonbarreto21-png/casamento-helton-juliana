@@ -10,6 +10,8 @@ exports.handler = async (event) => {
     const body = JSON.parse(event.body);
     const { item, value } = body;
 
+    console.log('Criando preferência para:', item, value);
+
     // Criar preferência de pagamento REAL
     const preference = await mercadopago.preferences.create({
       items: [
@@ -28,6 +30,8 @@ exports.handler = async (event) => {
       auto_return: 'approved'
     });
 
+    console.log('Preferência criada:', preference.body.id);
+
     return {
       statusCode: 200,
       headers: {
@@ -42,6 +46,8 @@ exports.handler = async (event) => {
 
   } catch (error) {
     console.error('Erro Mercado Pago:', error);
+    
+    // Modo simulação para não quebrar o site
     return {
       statusCode: 200,
       headers: {
@@ -51,7 +57,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ 
         success: true, 
         id: 'sim-' + Date.now(),
-        message: 'Modo simulação ativado'
+        message: 'Modo simulação ativado devido a erro: ' + error.message
       })
     };
   }
