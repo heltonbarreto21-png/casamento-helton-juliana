@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casamento de Helton & Juliana - 11/10/2025</title>
+    <title>Lista de Presentes - Helton & Juliana</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SDK do Mercado Pago -->
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
     <style>
-        /* Seus estilos CSS existentes aqui */
         :root {
             --cor-destaque: #6b8e23;
             --cor-destaque-escuro: #556b2f;
@@ -30,7 +27,6 @@
             background-color: var(--cor-claro);
             color: var(--cor-texto);
             line-height: 1.6;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%236b8e23" stroke-width="0.5" stroke-dasharray="5,5" opacity="0.3"/></svg>');
         }
         
         .container {
@@ -59,30 +55,6 @@
         .logo span {
             font-weight: 300;
             font-size: 1.8rem;
-        }
-        
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            margin-top: 1rem;
-        }
-        
-        .nav-links li {
-            margin: 0 15px;
-        }
-        
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 极0.3s ease;
-            padding: 5px 10px;
-            border-radius: 4px;
-        }
-        
-        .nav-links a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
         }
         
         .hero {
@@ -115,7 +87,7 @@
             font-family: 'Playfair Display', serif;
             font-size: 3.5rem;
             margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 极0, 0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         .date-badge {
@@ -187,7 +159,7 @@
         .gift-item {
             background: white;
             border-radius: 10px;
-            padding: 1.8rem;
+            overflow: hidden;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
             display: flex;
@@ -198,6 +170,20 @@
         .gift-item:hover {
             transform: translateY(-8px);
             box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .gift-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--cor-destaque);
+        }
+        
+        .gift-details {
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
         
         .gift-item h3 {
@@ -242,45 +228,6 @@
             margin-right: 8px;
         }
         
-        .rsvp-form {
-            max-width: 700px;
-            margin: 0 auto;
-            background: white;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(107, 142, 35, 0.3);
-        }
-        
-        .form-group {
-            margin-bottom: 1.8rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.7rem;
-            font-weight: 600;
-            color: var(--cor-destaque-escuro);
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border 0.3s ease;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--cor-destaque);
-            outline: none;
-        }
-        
         footer {
             background-color: var(--cor-destaque-escuro);
             color: white;
@@ -301,7 +248,7 @@
             margin-bottom: 1.5rem;
         }
         
-        .social极-links {
+        .social-links {
             display: flex;
             gap: 20px;
             margin: 1.5rem 0;
@@ -339,148 +286,6 @@
             .countdown {
                 flex-wrap: wrap;
             }
-            
-            .nav-links {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .nav-links li {
-                margin: 5px 0;
-            }
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-        }
-        
-极        .close-modal {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .close-modal:hover {
-            color: black;
-        }
-        
-        .photo-upload {
-            text-align: center;
-            margin: 2rem 0;
-            padding: 2rem;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-        }
-        
-        .upload-btn {
-            display: inline-block;
-            background-color: var(--cor-destaque);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 6极x;
-            cursor: pointer;
-            margin-top: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .upload-btn:hover {
-            background-color: var(--cor-destaque-escuro);
-        }
-        
-        #photo-preview {
-            max-width: 100%;
-            margin-top: 1rem;
-            border-radius: 10px;
-            display: none;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 2rem;
-        }
-        
-        .gallery-item {
-            border-radius: 10px;
-            overflow: hidden;
-            height: 200px;
-            position: relative;
-        }
-        
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-            text-align: center;
-            display: none;
-        }
-
-        /* Estilos para o checkout */
-        #checkout-btn {
-            margin-top: 1rem;
-            display: none;
-        }
-        
-        #wallet_container {
-            margin: 20px 0;
-        }
-        
-        .btn-loading {
-            position: relative;
-            color: transparent !important;
-        }
-
-        .btn-loading:after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 3px solid #fff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -488,26 +293,19 @@
     <header>
         <div class="container">
             <div class="logo">Helton <span>&</span> Juliana</div>
-            <ul class="nav-links">
-                <li><a href="#inicio">Início</a></li>
-                <li><a href="#confirmacao">Confirmação</a></li>
-                <li><a href="#presentes">Presentes</a></li>
-                <li><a href="#galeria">Galeria</a></li>
-                <li><a href="#contato">Contato</a></li>
-            </ul>
         </div>
     </header>
 
-    <section class="hero" id="inicio">
+    <section class="hero">
         <div class="container hero-content">
             <img src="https://i.ibb.co/Fq0nKc7P/foto-site.jpg" alt="Helton e Juliana" class="couple-photo">
             <h1>Helton & Juliana</h1>
             <p>Convidamos você para celebrar nosso matrimônio</p>
-            <div class="date极-badge">11 de Outubro de 2025</div>
+            <div class="date-badge">11 de Outubro de 2025</div>
             
             <div class="countdown">
                 <div class="countdown-item">
-                    <div class="极countdown-number" id="days">00</div>
+                    <div class="countdown-number" id="days">00</div>
                     <div class="countdown-label">Dias</div>
                 </div>
                 <div class="countdown-item">
@@ -526,45 +324,6 @@
         </div>
     </section>
 
-    <section id="confirmacao">
-        <div class="container">
-            <h2>Confirmação de Presença</h2>
-            <div class="rsvp-form">
-                <form id="confirmacao-form">
-                    <div class="form-group">
-                        <label for="nome">Nome completo</label>
-                        <input type="text" id="nome" name="nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <极div class="form-group">
-                        <label for="telefone">Telefone</label>
-                        <input type="tel" id="telefone" name="telefone">
-                    </div>
-                    <div class="form-group">
-                        <label for="presenca">Você comparecerá ao casamento?</label>
-                        <select id="presenca" name="presenca" required>
-                            <option value="">Selecione uma opção</option>
-                            <option value="sim">Sim, com certeza!</option>
-                            <option value="nao">Infelizmente não poderei comparecer</option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="quantidade-convidados">
-                        <label for="convidados">Número de pessoas</label>
-                        <input type="number" id="convidados" name="convidados" min="1" value="1">
-                    </div>
-                    <div class="form-group">
-                        <label for="mensagem">Mensagem para os noivos (opcional)</label>
-                        <textarea id="mensagem" name="mensagem" rows="4"></textarea>
-                    </div>
-                    <button type="submit" class="btn"><i class="fas fa-check-circle"></i> Confirmar Presença</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
     <section id="presentes">
         <div class="container">
             <h2>Lista de Presentes</h2>
@@ -572,78 +331,54 @@
             
             <div class="gift-list">
                 <div class="gift-item">
-                    <h3>Jantar Romântico</h3>
-                    <p>Um vale-jantar para desfrutarmos em nossa lua de mel</p>
-                    <span class="price">R$ 250,00</span>
-                    <button class="btn presentear-btn" data-item="Jantar Romântico" data-value="250"><i class="fas fa-gift"></i> Presentear</button>
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Diária em Hotel" class="gift-image">
+                    <div class="gift-details">
+                        <h3>Diária em Hotel</h3>
+                        <p>Uma diária em hotel para desfrutarmos em nossa lua de mel</p>
+                        <span class="price">R$ 300,00</span>
+                        <a href="https://kiwify.com/link-para-diaria-hotel" class="btn"><i class="fas fa-gift"></i> Presentear</a>
+                    </div>
                 </div>
                 
                 <div class="gift-item">
-                    <h3>Noite em Hotel</h3>
-                    <p>Para uma noite especial durante nossa lua de mel</p>
-                    <span class="price">R$ 400,00</span>
-                    <button class="btn presentear-btn" data-item="Noite em Hotel" data-value="400"><i class="fas fa-gift"></i> Presentear</button>
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Jantar Romântico" class="gift-image">
+                    <div class="gift-details">
+                        <h3>Jantar Romântico</h3>
+                        <p>Um jantar especial para celebrarmos nossa união</p>
+                        <span class="price">R$ 160,00</span>
+                        <a href="https://kiwify.com/link-para-jantar-romantico" class="btn"><i class="fas fa-gift"></i> Presentear</a>
+                    </div>
                 </div>
                 
                 <div class="gift-item">
-                    <h3>Cesta de Vinhos</h3>
-                    <p>Para brindarmos nossos momentos especiais</p>
-                    <span class="price">R$ 150,00</span>
-                    <button class="btn presentear-btn" data-item="Cesta de Vinhos" data-value="150"><i class="fas fa-gift"></i> Presentear</button>
+                    <img src="https://images.unsplash.com/photo-1508973379184-7517410fb0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Passeio de Barco" class="gift-image">
+                    <div class="gift-details">
+                        <h3>Passeio Aquático</h3>
+                        <p>Um passeio de barco para momentos inesquecíveis</p>
+                        <span class="price">R$ 250,00</span>
+                        <a href="https://kiwify.com/link-para-passeio-aquatico" class="btn"><i class="fas fa-gift"></i> Presentear</a>
+                    </div>
                 </div>
                 
                 <div class="gift-item">
-                    <h3>Passagem Aérea</h3>
-                    <p>Ajude-nos com nossa viagem de lua de mel</p>
-                    <span class="price">R$ 600,00</span>
-                    <button class="btn presentear-btn" data-item="Passagem Aérea" data-value="600"><i class="fas fa-gift"></i> Presentear</button>
+                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Passeio Terrestre" class="gift-image">
+                    <div class="gift-details">
+                        <h3>Passeio Terrestre</h3>
+                        <p>Um passeio para explorarmos juntos novos lugares</p>
+                        <span class="price">R$ 200,00</span>
+                        <a href="https://kiwify.com/link-para-passeio-terrestre" class="btn"><i class="fas fa-gift"></i> Presentear</a>
+                    </div>
                 </div>
                 
                 <div class="gift-item">
-                    <h3>Café da Manhã</h3>
-                    <p>Para começarmos nossos dias com energia</p>
-                    <span class="price">R$ 130,00</span>
-                    <button class="btn presentear-btn" data-item="Café da Manhã" data-value="130"><i class="fas fa-gift"></i> Presentear</button>
+                    <img src="https://images.unsplash.com/photo-1542995470-870e12e7e14f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Presente Surpresa" class="gift-image">
+                    <div class="gift-details">
+                        <h3>Presente Surpresa</h3>
+                        <p>Surpreenda-nos com um presente especial</p>
+                        <span class="price">R$ 120,00</span>
+                        <a href="https://kiwify.com/link-para-presente-surpresa" class="btn"><i class="fas fa-gift"></i> Presentear</a>
+                    </div>
                 </div>
-                
-                <div class="gift-item">
-                    <h3>Valor Personalizado</h3>
-                    <p>Contribua com o valor que desejar</p>
-                    <span class="price">A partir de R$ 100,00</span>
-                    <button class="btn presentear-btn" data-item="Valor Personalizado" data-value="100"><i class="fas fa-gift"></i> Presentear</button>
-                </div>
-            </div>
-            
-            <!-- Checkout do Mercado Pago -->
-            <div id="wallet_container" style="display: none; max-width: 600px; margin: 2rem auto;"></div>
-            <button id="checkout-btn" class="btn" style="display: none;"><i class="fas fa-credit-card"></i> Finalizar Pagamento</button>
-        </div>
-    </section>
-
-    <section id="galeria">
-        <div class="container">
-            <h2>Nossa Galeria</h2>
-            <div class="gallery">
-                <div class="gallery-item">
-                    <img src="https://i.ibb.co/Fq0nKc7P/foto-site.jpg" alt="Helton e Juliana">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://i.ibb.co/wNCWLTB1/foto-site3.jpg" alt="Helton e Juliana">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://i.ibb.co/Vc0WJ0LM/foto-site2.jpg" alt="Helton e Juliana">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1567532939604-b6b5b0db1604?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Foto do casal 4">
-                </div>
-            </div>
-            
-            <div class="photo-upload">
-                <p>Adicione uma foto sua com os noivos para nossa galeria!</p>
-                <input type="file" id="photo-input" accept="image/*" style="display: none;">
-                <label for="photo-input" class="upload-btn"><极i class="fas fa-upload"></i> Selecionar Foto</label>
-                <img id="photo-preview" alt="Preview da foto">
-                <button class="btn" id="upload-btn" style="display: none; margin-top: 1rem;">Enviar Foto</button>
             </div>
         </div>
     </section>
@@ -655,8 +390,7 @@
                 <p>11 de Outubro de 2025</p>
                 
                 <div class="social-links">
-                    <a href="https://www.instagram.com/julianadcm1985/" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/julianadcm1985?igsh=NjY1aXpqMGd0bTI=" target="_blank"><i class="fab fa-instagram"></i></a>
                     <a href="https://wa.me/5581999900727" target="_blank"><i class="fab fa-whatsapp"></i></a>
                     <a href="mailto:julidcm@hotmail.com"><i class="far fa-envelope"></i></a>
                 </div>
@@ -674,131 +408,26 @@
         </div>
     </footer>
 
-    <div class="modal" id="obrigado-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Obrigado!</h2>
-            <p>Sua confirmação de presença foi registrada com sucesso.</p>
-            <p>Estamos ansiosos para celebrar este dia especial com você!</p>
-        </div>
-    </div>
-
-<script>
-// Inicializar Mercado Pago com suas credenciais de produção
-const mp = new MercadoPago('APP_USR-405c1c0d-59db-4f6c-9e03-c3896242e1c3', {
-    locale: 'pt-BR'
-});
-
-// Função REAL para processar pagamento
-async function processarPagamentoReal(item, valor) {
-    try {
-        // URL da sua função Netlify (COM SUA URL)
-        const netlifyFunctionURL = 'https://super-sunburst-8d98a0.netlify.app/.netlify/functions/mercadopago';
-        
-        const response = await fetch(netlifyFunctionURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                item: item,
-                value: valor
-            })
-        });
-
-        const data = await response.json();
-        
-        // Redirecionar para o checkout REAL do Mercado Pago
-        window.location.href = `https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=${data.id}`;
-        
-    } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro ao processar pagamento. Tente novamente.');
-    }
-}
-
-// Contagem regressiva para o casamento
-function updateCountdown() {
-    const weddingDate = new Date('2025-10-11T00:00:00');
-    const now = new Date();
-    const diff = weddingDate - now;
-    
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    
-    document.getElementById('days').textContent = days.toString().padStart(2, '0');
-    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-}
-
-setInterval(updateCountdown, 1000);
-updateCountdown();
-
-// Controle do formulário de confirmação
-document.getElementById('confirmacao-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    document.getElementById('obrigado-modal').style.display = 'flex';
-    this.reset();
-});
-
-// Fechar modal
-document.querySelector('.close-modal').addEventListener('click', function() {
-    document.getElementById('obrigado-modal').style.display = 'none';
-});
-
-// Fechar modal ao clicar fora
-window.addEventListener('click', function(e) {
-    if (e.target === document.getElementById('obrigado-modal')) {
-        document.getElementById('obrigado-modal').style.display = 'none';
-    }
-});
-
-// Controle dos botões de presente
-document.querySelectorAll('.presentear-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const item = this.getAttribute('data-item');
-        const value = this.getAttribute('data-value');
-        processarPagamentoReal(item, value);
-    });
-});
-
-// Mostrar/ocultar campo de número de convidados baseado na seleção
-document.getElementById('presenca').addEventListener('change', function() {
-    const convidadosDiv = document.getElementById('quantidade-convidados');
-    if (this.value === 'sim') {
-        convidadosDiv.style.display = 'block';
-    } else {
-        convidadosDiv.style.display = 'none';
-    }
-});
-
-// Inicialmente ocultar o campo de convidados
-document.getElementById('quantidade-convidados').style.display = 'none';
-
-// Preview de foto
-document.getElementById('photo-input').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('photo-preview').src = e.target.result;
-            document.getElementById('photo-preview').style.display = 'block';
-            document.getElementById('upload-btn').style.display = 'inline-block';
+    <script>
+        // Contagem regressiva para o casamento
+        function updateCountdown() {
+            const weddingDate = new Date('2025-10-11T00:00:00');
+            const now = new Date();
+            const diff = weddingDate - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
-        reader.readAsDataURL(file);
-    }
-});
 
-// Upload de foto (simulado)
-document.getElementById('upload-btn').addEventListener('click', function() {
-    alert('Foto enviada com sucesso! Obrigado por compartilhar este momento conosco.');
-    document.getElementById('photo-preview').style.display = 'none';
-    document.getElementById('photo-input').value = '';
-    this.style.display = 'none';
-});
-</script>
-
-
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
