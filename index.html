@@ -683,173 +683,120 @@
         </div>
     </div>
 
-    <script>
-        // Inicializar Mercado Pago com suas credenciais de produção
-        const mp = new MercadoPago('APP_USR-405c1c0d-59db-4f6c-9e03-c3896242e1c3', {
-            locale: 'pt-BR'
+<script>
+// Inicializar Mercado Pago com suas credenciais de produção
+const mp = new MercadoPago('APP_USR-405c1c0d-59db-4f6c-9e03-c3896242e1c3', {
+    locale: 'pt-BR'
+});
+
+// Função REAL para processar pagamento
+async function processarPagamentoReal(item, valor) {
+    try {
+        // URL da sua função Netlify (COM SUA URL)
+        const netlifyFunctionURL = 'https://super-sunburst-8d98a0.netlify.app/.netlify/functions/mercadopago';
+        
+        const response = await fetch(netlifyFunctionURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                item: item,
+                value: valor
+            })
         });
 
-        // Variáveis globais
-        let currentItem = '';
-        let currentValue = 0;
+        const data = await response.json();
+        
+        // Redirecionar para o checkout REAL do Mercado Pago
+        window.location.href = `https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=${data.id}`;
+        
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao processar pagamento. Tente novamente.');
+    }
+}
 
-        // Contagem regressiva para o casamento
-        function updateCountdown() {
-            const weddingDate = new Date('2025-10-11T00:00:00');
-            const now = new Date();
-            const diff = weddingDate - now;
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+// Contagem regressiva para o casamento
+function updateCountdown() {
+    const weddingDate = new Date('2025-10-11T00:00:00');
+    const now = new Date();
+    const diff = weddingDate - now;
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    document.getElementById('days').textContent = days.toString().padStart(2, '0');
+    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+}
+
+setInterval(update极down, 1000);
+updateCountdown();
+
+// Controle do formulário de confirmação
+document.getElementById('confirmacao-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('obrigado-modal').style.display = 'flex';
+    this.reset();
+});
+
+// Fechar modal
+document.querySelector('.close-modal').addEventListener('click', function() {
+    document.getElementById('obrigado-modal').style.display = 'none';
+});
+
+// Fechar modal ao clicar fora
+window.addEventListener('click', function(e) {
+    if (e.target === document.getElementById('obrigado-modal')) {
+        document.getElementById('obrigado-modal').style.display = 'none';
+    }
+});
+
+// Controle dos botões de presente
+document.querySelectorAll('.presentear-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const item = this.getAttribute('data-item');
+        const value = this.getAttribute('data-value');
+        processarPagamentoReal(item, value);
+    });
+});
+
+// Mostrar/ocultar campo de número de convidados baseado na seleção
+document.getElementById('presenca').addEventListener('change', function() {
+    const convidadosDiv = document.getElementById('quantidade-convidados');
+    if (this.value === 'sim') {
+        convidadosDiv.style.display = 'block';
+    } else {
+        convidadosDiv.style.display = 'none';
+    }
+});
+
+// Inicialmente ocultar o campo de convidados
+document.getElementById('quantidade-convidados').style.display = 'none';
+
+// Preview de foto
+document.getElementById('photo-input').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('photo-preview').src = e.target.result;
+            document.getElementById('photo-preview').style.display = 'block';
+            document.getElementById('upload-btn').style.display = 'inline-block';
         }
-        
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-        
-        // Controle do formulário de confirmação
-        document.getElementById('confirmacao-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            document.getElementById('obrigado-modal').style.display = 'flex';
-            this.reset();
-        });
-        
-        // Fechar modal
-        document.querySelector('.close-modal').addEventListener('click', function() {
-            document.getElementById('obrigado-modal').style.display = 'none';
-        });
-        
-        // Fechar modal ao clicar fora
-        window.addEventListener('click', function(e) {
-            if (e.target === document.getElementById('obrigado-modal')) {
-                document.getElementById('obrigado-modal').style.display = 'none';
-            }
-        });
-        
-        // Função para inicializar o checkout
-        function initializeCheckout(item, value) {
-            currentItem = item;
-            currentValue = value;
-            
-            // Mostrar o container do checkout
-            document.getElementById('wallet_container').style.display = 'block';
-            document.getElementById('checkout-btn').style.display = 'block';
-            
-            // Limpar qualquer checkout anterior
-            document.getElementById('wallet_container').innerHTML = '';
-            
-            // Inicializar o checkout
-            mp.checkout({
-                preference: {
-                    id: '' // Será preenchido dinamicamente
-                },
-                render: {
-                    container: '#wallet_container',
-                    label: 'Pagar presente',
-                }
-            });
-            
-            // Criar a preferência de pagamento
-            criarPreferenciaPagamento(item, value);
-        }
-        
-        // Função para criar preferência de pagamento (simulada)
-        function criarPreferenciaPagamento(item, value) {
-            // Em uma implementação real, isso seria feito no backend
-            // Aqui estamos simulando a criação de uma preferência
-            
-            // Simular um ID de preferência (em produção, isso viria do seu backend)
-            const preferenceId = 'simulated-preference-' + Date.now();
-            
-            // Configurar o checkout com a preferência simulada
-            mp.checkout({
-                preference: {
-                    id: preferenceId,
-                    items: [
-                        {
-                            id: 'item-' + Date.now(),
-                            title: item,
-                            quantity: 1,
-                            unit_price: parseFloat(value),
-                            currency_id: 'BRL'
-                        }
-                    ]
-                },
-                render: {
-                    container: '#wallet_container',
-                    label: 'Pagar presente',
-                }
-            });
-            
-            // Mostrar mensagem informativa
-            alert('Em ambiente de produção, esta função se conectaria ao backend para criar um pagamento real. Esta é uma simulação.');
-        }
-        
-        // Controle dos botões de presente
-        document.querySelectorAll('.presentear-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const item = this.getAttribute('data-item');
-                const value = this.getAttribute('data-value');
-                
-                // Inicializar o checkout
-                initializeCheckout(item, value);
-                
-                // Rolar suavemente até a seção de checkout
-                document.getElementById('wallet_container').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
-            });
-        });
-        
-        // Botão de finalizar pagamento
-        document.getElementById('checkout-btn').addEventListener('click', function() {
-            alert('Pagamento processado com sucesso! Obrigado pelo presente.\n\nEm ambiente real, esta função processaria o pagamento através do Mercado Pago.');
-            
-            // Ocultar o checkout após o "pagamento"
-            document.getElementById('wallet_container').style.display = 'none';
-            this.style.display = 'none';
-        });
-        
-        // Mostrar/ocultar campo de número de convidados baseado na seleção
-        document.getElementById('presenca').addEventListener('change', function() {
-            const convidadosDiv = document.getElementById('quantidade-convidados');
-            if (this.value === 'sim') {
-                convidadosDiv.style.display = 'block';
-            } else {
-                convidadosDiv.style.display = 'none';
-            }
-        });
-        
-        // Inicialmente ocultar o campo de convidados
-        document.getElementById('quantidade-convidados').style.display = 'none';
-        
-        // Preview de foto
-        document.getElementById('photo-input').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('photo-preview').src = e.target.result;
-                    document.getElementById('photo-preview').style.display = 'block';
-                    document.getElementById('upload-btn').style.display = 'inline-block';
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        // Upload de foto (simulado)
-        document.getElementById('upload-btn').addEventListener('click', function() {
-            alert('Foto enviada com sucesso! Obrigado por compartilhar este momento conosco.');
-            document.getElementById('photo-preview').style.display = 'none';
-            document.getElementById('photo-input').value = '';
-            this.style.display = 'none';
-        });
-    </script>
-</body>
-</html>
+        reader.readAsDataURL(file);
+    }
+});
+
+// Upload de foto (simulado)
+document.getElementById('upload-btn').addEventListener('click', function() {
+    alert('Foto enviada com sucesso! Obrigado por compartilhar este momento conosco.');
+    document.getElementById('photo-preview').style.display = 'none';
+    document.getElementById('photo-input').value = '';
+    this.style.display = 'none';
+});
+</script>
