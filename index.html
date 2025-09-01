@@ -708,271 +708,272 @@
     </footer>
 
     <script>
-        // Contagem regressiva para o casamento
-        function updateCountdown() {
-            const weddingDate = new Date(2025, 9, 11, 16, 30, 0);
-            const now = new Date();
+// Contagem regressiva para o casamento
+function updateCountdown() {
+    const weddingDate = new Date(2025, 9, 11, 16, 30, 0);
+    const now = new Date();
+    
+    if (now > weddingDate) {
+        document.getElementById('days').textContent = '00';
+        document.getElementById('hours').textContent = '00';
+        document.getElementById('minutes').textContent = '00';
+        document.getElementById('seconds').textContent = '00';
+        return;
+    }
+    
+    const diff = weddingDate - now;
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    document.getElementById('days').textContent = days.toString().padStart(2, '0');
+    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+}
+
+// Iniciar contador
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// Script para enviar para o Google Sheets
+document.getElementById('presence').addEventListener('change', function() {
+    document.getElementById('convidados-group').style.display = this.value === 'Sim' ? 'block' : 'none';
+});
+
+// URL do Google Apps Script - USE SUA URL CORRETA AQUI
+const scriptURL = 'https://script.google.com/macros/s/AKfycbznaTA_UJUP3p_c6Mr4TC8QFMD-d9Y33QcPXU2N0NVM93Oq2HVOh7QvT7QKOjnhliE0/exec';
+
+document.getElementById('presence-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // MOSTRAR CARREGAMENTO
+    const btn = this.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+    btn.disabled = true;
+    
+    // Coletar nomes dos acompanhantes
+    const guestNames = [];
+    const guestInputs = document.querySelectorAll('.guest-name');
+    guestInputs.forEach(input => {
+        if (input.value.trim() !== '') {
+            guestNames.push(input.value.trim());
+        }
+    });
+    
+    const formData = {
+        nome: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        telefone: document.getElementById('phone').value,
+        confirmacao: document.getElementById('presence').value,
+        convidados: document.getElementById('guests').value || '0',
+        nomes_convidados: guestNames.join('; '),
+        mensagem: document.getElementById('message').value
+    };
+    
+    fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.result === 'success') {
+            alert('✅ Confirmação enviada com sucesso! Obrigado!');
+            document.getElementById('presence-form').reset();
+            document.getElementById('convidados-group').style.display = 'none';
+            document.getElementById('guest-names').style.display = 'none';
+            document.getElementById('guest-inputs').innerHTML = '';
+        } else {
+            throw new Error(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ Erro ao enviar: ' + error.message);
+    })
+    .finally(() => {
+        // RESTAURAR BOTÃO
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+});
+
+// Sistema de Confirmação de Presença
+document.addEventListener('DOMContentLoaded', function() {
+    // Mostrar/ocultar campos de acompanhantes
+    document.getElementById('guests').addEventListener('change', function() {
+        const guestCount = parseInt(this.value);
+        const guestNamesDiv = document.getElementById('guest-names');
+        const guestInputs = document.getElementById('guest-inputs');
+        
+        if (guestCount > 0) {
+            guestNamesDiv.style.display = 'block';
+            guestInputs.innerHTML = '';
             
-            if (now > weddingDate) {
-                document.getElementById('days').textContent = '00';
-                document.getElementById('hours').textContent = '00';
-                document.getElementById('minutes').textContent = '00';
-                document.getElementById('seconds').textContent = '00';
+            for (let i = 0; i < guestCount; i++) {
+                addGuestInput();
+            }
+        } else {
+            guestNamesDiv.style.display = 'none';
+        }
+    });
+    
+    // Adicionar campo de acompanhante
+    document.getElementById('add-guest').addEventListener('click', function() {
+        addGuestInput();
+    });
+    
+    // Sistema de autenticação
+    document.getElementById('login-btn').addEventListener('click', function() {
+        const password = document.getElementById('admin-password').value;
+        // Senha padrão - você pode alterar para uma mais segura
+        if (password === 'helton&juliana2025') {
+            document.getElementById('login-panel').classList.add('hidden');
+            document.getElementById('confirmation-list').classList.remove('hidden');
+            loadConfirmations();
+        } else {
+            alert('Senha incorreta. Apenas os noivos têm acesso a esta lista.');
+        }
+    });
+    
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', function() {
+        document.getElementById('confirmation-list').classList.add('hidden');
+        document.getElementById('login-panel').classList.remove('hidden');
+        document.getElementById('admin-password').value = '';
+    });
+    
+    // Filtros
+    document.getElementById('filter-presence').addEventListener('change', loadConfirmations);
+    document.getElementById('search-name').addEventListener('input', loadConfirmations);
+    
+    // Exportar lista
+    document.getElementById('export-btn').addEventListener('click', exportConfirmations);
+});
+
+function addGuestInput() {
+    const guestInputs = document.getElementById('guest-inputs');
+    const div = document.createElement('div');
+    div.className = 'guest-input';
+    div.innerHTML = `
+        <input type="text" class="guest-name" placeholder="Nome do acompanhante">
+        <button type="button" class="remove-guest">&times;</button>
+    `;
+    
+    div.querySelector('.remove-guest').addEventListener('click', function() {
+        div.remove();
+    });
+    
+    guestInputs.appendChild(div);
+}
+
+function loadConfirmations() {
+    const filterPresence = document.getElementById('filter-presence').value;
+    const searchName = document.getElementById('search-name').value.toLowerCase();
+    
+    // Buscar dados do Google Sheets
+    fetch(scriptURL + '?action=getData')
+    .then(response => response.json())
+    .then(data => {
+        if (data.result === 'success') {
+            let confirmations = data.data;
+            
+            // Aplicar filtros
+            if (filterPresence !== 'all') {
+                confirmations = confirmations.filter(c => c.confirmacao === filterPresence);
+            }
+            
+            if (searchName) {
+                confirmations = confirmations.filter(c => 
+                    c.nome.toLowerCase().includes(searchName) ||
+                    (c.nomes_convidados && c.nomes_convidados.toLowerCase().includes(searchName))
+                );
+            }
+            
+            const guestsList = document.getElementById('guests-list');
+            
+            if (confirmations.length === 0) {
+                guestsList.innerHTML = '<p class="no-confirmations">Nenhuma confirmação encontrada</p>';
                 return;
             }
             
-            const diff = weddingDate - now;
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-        }
-
-        // Iniciar contador
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // Script para enviar para o Google Sheets
-        document.getElementById('presence').addEventListener('change', function() {
-            document.getElementById('convidados-group').style.display = this.value === 'Sim' ? 'block' : 'none';
-        });
-
-        // URL do Google Apps Script
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbznaTA_UJUP3p_c6Mr4TC8QFMD-d9Y33QcPXU2N0NVM93Oq2HVOh7QvT7QKOjnhliE0/exec';
-
-        document.getElementById('presence-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // MOSTRAR CARREGAMENTO
-            const btn = this.querySelector('button[type="submit"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-            btn.disabled = true;
-            
-            // Coletar nomes dos acompanhantes
-            const guestNames = [];
-            const guestInputs = document.querySelectorAll('.guest-name');
-            guestInputs.forEach(input => {
-                if (input.value.trim() !== '') {
-                    guestNames.push(input.value.trim());
-                }
-            });
-            
-            const formData = {
-                nome: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                telefone: document.getElementById('phone').value,
-                confirmacao: document.getElementById('presence').value,
-                convidados: document.getElementById('guests').value || '0',
-                nomes_convidados: guestNames.join('; '),
-                mensagem: document.getElementById('message').value
-            };
-            
-            fetch(scriptURL, {
-                method: 'POST',
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.result === 'success') {
-                    alert('✅ Confirmação enviada com sucesso! Obrigado!');
-                    document.getElementById('presence-form').reset();
-                    document.getElementById('convidados-group').style.display = 'none';
-                    document.getElementById('guest-names').style.display = 'none';
-                    document.getElementById('guest-inputs').innerHTML = '';
-                } else {
-                    throw new Error(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('❌ Erro ao enviar: ' + error.message);
-            })
-            .finally(() => {
-                // RESTAURAR BOTÃO
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            });
-        });
-
-        // Sistema de Confirmação de Presença
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mostrar/ocultar campos de acompanhantes
-            document.getElementById('guests').addEventListener('change', function() {
-                const guestCount = parseInt(this.value);
-                const guestNamesDiv = document.getElementById('guest-names');
-                const guestInputs = document.getElementById('guest-inputs');
-                
-                if (guestCount > 0) {
-                    guestNamesDiv.style.display = 'block';
-                    guestInputs.innerHTML = '';
-                    
-                    for (let i = 0; i < guestCount; i++) {
-                        addGuestInput();
-                    }
-                } else {
-                    guestNamesDiv.style.display = 'none';
-                }
-            });
-            
-            // Adicionar campo de acompanhante
-            document.getElementById('add-guest').addEventListener('click', function() {
-                addGuestInput();
-            });
-            
-            // Sistema de autenticação
-            document.getElementById('login-btn').addEventListener('click', function() {
-                const password = document.getElementById('admin-password').value;
-                // Senha padrão - você pode alterar para uma mais segura
-                if (password === 'helton&juliana2025') {
-                    document.getElementById('login-panel').classList.add('hidden');
-                    document.getElementById('confirmation-list').classList.remove('hidden');
-                    loadConfirmations();
-                } else {
-                    alert('Senha incorreta. Apenas os noivos têm acesso a esta lista.');
-                }
-            });
-            
-            // Logout
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                document.getElementById('confirmation-list').classList.add('hidden');
-                document.getElementById('login-panel').classList.remove('hidden');
-                document.getElementById('admin-password').value = '';
-            });
-            
-            // Filtros
-            document.getElementById('filter-presence').addEventListener('change', loadConfirmations);
-            document.getElementById('search-name').addEventListener('input', loadConfirmations);
-            
-            // Exportar lista
-            document.getElementById('export-btn').addEventListener('click', exportConfirmations);
-        });
-        
-        function addGuestInput() {
-            const guestInputs = document.getElementById('guest-inputs');
-            const div = document.createElement('div');
-            div.className = 'guest-input';
-            div.innerHTML = `
-                <input type="text" class="guest-name" placeholder="Nome do acompanhante">
-                <button type="button" class="remove-guest">&times;</button>
+            let html = `
+                <table class="guest-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Presença</th>
+                            <th>Acompanhantes</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
             `;
             
-            div.querySelector('.remove-guest').addEventListener('click', function() {
-                div.remove();
+            confirmations.forEach(confirmation => {
+                html += `
+                    <tr>
+                        <td>${confirmation.nome}</td>
+                        <td>${confirmation.email}</td>
+                        <td>${confirmation.confirmacao}</td>
+                        <td>${confirmation.convidados || '0'} ${confirmation.nomes_convidados ? `(${confirmation.nomes_convidados})` : ''}</td>
+                        <td>${new Date(confirmation.timestamp).toLocaleDateString('pt-BR')}</td>
+                    </tr>
+                `;
             });
             
-            guestInputs.appendChild(div);
-        }
-        
-        function loadConfirmations() {
-            const filterPresence = document.getElementById('filter-presence').value;
-            const searchName = document.getElementById('search-name').value.toLowerCase();
+            html += `
+                    </tbody>
+                </table>
+            `;
             
-            // Buscar dados do Google Sheets
-            fetch(scriptURL + '?action=getData')
-            .then(response => response.json())
-            .then(data => {
-                if (data.result === 'success') {
-                    let confirmations = data.data;
-                    
-                    // Aplicar filtros
-                    if (filterPresence !== 'all') {
-                        confirmations = confirmations.filter(c => c.confirmacao === filterPresence);
-                    }
-                    
-                    if (searchName) {
-                        confirmations = confirmations.filter(c => 
-                            c.nome.toLowerCase().includes(searchName) ||
-                            (c.nomes_convidados && c.nomes_convidados.toLowerCase().includes(searchName))
-                        );
-                    }
-                    
-                    const guestsList = document.getElementById('guests-list');
-                    
-                    if (confirmations.length === 0) {
-                        guestsList.innerHTML = '<p class="no-confirmations">Nenhuma confirmação encontrada</p>';
-                        return;
-                    }
-                    
-                    let html = `
-                        <table class="guest-table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>E-mail</th>
-                                    <th>Presença</th>
-                                    <th>Acompanhantes</th>
-                                    <th>Data</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                    `;
-                    
-                    confirmations.forEach(confirmation => {
-                        html += `
-                            <tr>
-                                <td>${confirmation.nome}</td>
-                                <td>${confirmation.email}</td>
-                                <td>${confirmation.confirmacao}</td>
-                                <td>${confirmation.convidados || '0'} ${confirmation.nomes_convidados ? `(${confirmation.nomes_convidados})` : ''}</td>
-                                <td>${new Date(confirmation.timestamp).toLocaleDateString('pt-BR')}</td>
-                            </tr>
-                        `;
-                    });
-                    
-                    html += `
-                            </tbody>
-                        </table>
-                    `;
-                    
-                    guestsList.innerHTML = html;
-                } else {
-                    document.getElementById('guests-list').innerHTML = '<p class="no-confirmations">Erro ao carregar confirmações</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                document.getElementById('guests-list').innerHTML = '<p class="no-confirmations">Erro ao carregar confirmações</p>';
-            });
+            guestsList.innerHTML = html;
+        } else {
+            document.getElementById('guests-list').innerHTML = '<p class="no-confirmations">Erro ao carregar confirmações</p>';
         }
-        
-        function exportConfirmations() {
-            fetch(scriptURL + '?action=getData')
-            .then(response => response.json())
-            .then(data => {
-                if (data.result === 'success') {
-                    let csv = 'Nome,E-mail,Telefone,Confirmação,Convidados,Nomes Convidados,Mensagem,Data\n';
-                    
-                    data.data.forEach(row => {
-                        csv += `"${row.nome}","${row.email}","${row.telefone || ''}","${row.confirmacao}","${row.convidados || '0'}","${row.nomes_convidados || ''}","${row.mensagem || ''}","${row.timestamp}"\n`;
-                    });
-                    
-                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                    const link = document.createElement('a');
-                    const url = URL.createObjectURL(blob);
-                    
-                    link.setAttribute('href', url);
-                    link.setAttribute('download', 'lista_confirmados_casamento.csv');
-                    link.style.visibility = 'hidden';
-                    
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        document.getElementById('guests-list').innerHTML = '<p class="no-confirmations">Erro ao carregar confirmações</p>';
+    });
+}
+
+function exportConfirmations() {
+    fetch(scriptURL + '?action=getData')
+    .then(response => response.json())
+    .then(data => {
+        if (data.result === 'success') {
+            let csv = 'Nome,E-mail,Telefone,Confirmação,Convidados,Nomes Convidados,Mensagem,Data\n';
+            
+            data.data.forEach(row => {
+                csv += `"${row.nome}","${row.email}","${row.telefone || ''}","${row.confirmacao}","${row.convidados || '0'}","${row.nomes_convidados || ''}","${row.mensagem || ''}","${row.timestamp}"\n`;
             });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'lista_confirmados_casamento.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
+    });
+}
     </script>
 </body>
 </html>
+
 
 
 
