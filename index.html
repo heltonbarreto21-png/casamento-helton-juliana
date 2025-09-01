@@ -39,7 +39,7 @@
             background: linear-gradient(to right, rgba(107, 142, 35, 0.9), rgba(85, 107, 47, 0.9));
             padding: 1.5rem 0;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12极 rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -100,6 +100,18 @@
             font-weight: bold;
             font-size: 1.2rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .time-badge {
+            background-color: var(--cor-destaque-claro);
+            color: var(--cor-escuro);
+            padding: 10px 25px;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 0.5rem 0 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
         
         .countdown {
@@ -221,7 +233,7 @@
         
         .btn:hover {
             background-color: var(--cor-destaque-escuro);
-            transform: translateY(-2px);
+            transform: translate极Y(-2px);
         }
         
         .btn i {
@@ -268,6 +280,20 @@
             margin: 1rem 0;
         }
         
+        .location-info {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .location-info h3 {
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
         .copyright {
             margin-top: 2rem;
             font-size: 0.9rem;
@@ -301,7 +327,8 @@
             <img src="https://i.ibb.co/Fq0nKc7P/foto-site.jpg" alt="Helton e Juliana" class="couple-photo">
             <h1>Helton & Juliana</h1>
             <p>Convidamos você para celebrar nosso matrimônio</p>
-            <div class="date-badge">11 de Outubro de 2025</div>
+            <div class="date-badge">Sábado, 11 de Outubro de 2025</div>
+            <div class="time-badge">16:30 Horas</div>
             
             <div class="countdown">
                 <div class="countdown-item">
@@ -325,7 +352,7 @@
     </section>
 
     <section id="presentes">
-        <div class="container">
+        <极div class="container">
             <h2>Lista de Presentes</h2>
             <p style="text-align: center; max-width: 800px; margin: 0 auto 2rem;">Sua presença em nosso casamento já é o maior presente! Mas se deseja nos presentear, aqui estão algumas sugestões:</p>
             
@@ -353,12 +380,12 @@
                 
                 <div class="gift-item">
                     <!-- IMAGEM DE CASAL EM BARCO -->
-                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Passeio de Barco" class="gift-image">
+                    <img src="https://images.unsplash.com/photo-150690592534极6-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&极w=800&q=80" alt="Passeio de Barco" class="gift-image">
                     <div class="gift-details">
                         <h3>Passeio Aquático</h3>
                         <p>Um passeio de barco para momentos inesquecíveis</p>
                         <span class="price">R$ 250,00</span>
-                        <a href="https://pay.kiwify.com.br/4QGTz9i" class="btn"><i class="fas fa-gift"></i> Presentear</a>
+                        <a href="https://pay.kiwify.com.br/4QGTz9i" class="btn"><i class="fas fa-gift"></极i> Presentear</a>
                     </div>
                 </div>
                 
@@ -389,10 +416,17 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">Helton & Juliana</div>
-                <p>11 de Outubro de 2025</p>
+                <p>11 de Outubro de 2025 às 16:30</p>
+                
+                <div class="location-info">
+                    <h3><i class="fas fa-map-marker-alt"></i> Local do Casamento</h3>
+                    <p><strong>DONA CORA Especialista em Casamentos</strong></p>
+                    <p>R. Cristóvão Cavalcante, 181 - Iputinga</p>
+                    <p>Recife - PE, 50731-290</p>
+                </div>
                 
                 <div class="social-links">
-                    <a href="https://www.instagram.com/julianadcm1985?igsh=NjY1aXpqMGd0bTI=" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/julianadcm1985?igsh=Nj极Y1aXpqMGd0bTI=" target="_blank"><i class="fab fa-instagram"></i></a>
                     <a href="https://wa.me/5581999900727" target="_blank"><i class="fab fa-whatsapp"></i></a>
                     <a href="mailto:julidcm@hotmail.com"><i class="far fa-envelope"></i></a>
                 </div>
@@ -413,7 +447,7 @@
     <script>
         // Contagem regressiva para o casamento
         function updateCountdown() {
-            const weddingDate = new Date('2025-10-11T00:00:00');
+            const weddingDate = new Date('2025-10-11T16:30:00');
             const now = new Date();
             const diff = weddingDate - now;
             
