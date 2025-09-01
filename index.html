@@ -744,7 +744,7 @@ document.getElementById('presence').addEventListener('change', function() {
 });
 
 // URL do Google Apps Script - USE SUA URL CORRETA AQUI
-const scriptURL = 'https://script.google.com/macros/s/AKfycbww8f2FE59c5euKHFCZ2ofvAXb1C6drmCva7sQyXYCn9TqGq9HkZLmxtTLx1UJDtQ8/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxVxhIY6C-sHB-YEV8t7ePLKGwtlLiuwz3DeP9FZxUk9jhLq5j1bNWOV5BBeJWVnNKB/exec';
 
 document.getElementById('presence-form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -774,10 +774,54 @@ document.getElementById('presence-form').addEventListener('submit', function(e) 
         mensagem: document.getElementById('message').value
     };
     
-    fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
+    // Primeiro fazer uma requisição OPTIONS para verificar CORS
+    fetch(scriptURL + '?options=true&origin=' + encodeURIComponent(window.location.origin), {
+        method: 'OPTIONS'
+    })
+    .then(() => {
+        // Agora fazer a requisição POST real
+        return fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify(formData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro na resposta do servidor: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.result === 'success') {
+            alert('✅ Confirmação enviada com sucesso! Obrigado!');
+            document.getElementById('presence-form').reset();
+            document.getElementById('convidados-group').style.display = 'none';
+            document.getElementById('guest-names').style.display = 'none';
+            document.getElementById('guest-inputs').innerHTML = '';
+        } else {
+            throw new Error(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ Erro ao enviar: ' + error.message);
+        
+        // Fallback: tentar abrir em nova janela (para contornar CORS)
+        const formDataString = Object.keys(formData)
+            .map(key => key + '=' + encodeURIComponent(formData[key]))
+            .join('&');
+            
+        window.open(scriptURL + '?' + formDataString, '_blank');
+    })
+    .finally(() => {
+        // RESTAURAR BOTÃO
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+});
             'Content-Type': 'application/json'
         }
     })
@@ -973,6 +1017,7 @@ function exportConfirmations() {
     </script>
 </body>
 </html>
+
 
 
 
